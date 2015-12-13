@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+   
+
+<html>
+
+	<head>
+		 
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge" >
+		<meta name="viewport" content="width=device-width">
+		<meta name="fragment" content="!">
+		<meta charset="utf-8">
+
+ 		<script src="phonegap.js"></script>
+
+		<script>
+		
+				var ENV_NAME = "bidspirit";
+				 
+				var GlobalConfig={
+					apiBase : "https://"+ENV_NAME+".com/services/",
+					staticFilesBase : "./",
+					cachedApiBase : "https://"+ENV_NAME+"-portal.global.ssl.fastly.net/services/",					
+					jsFilesBase : "./",
+					templatesBase : "/",
+					pageLoadTime : new Date().getTime(),
+					appVersion : '0.585',
+					mobileAppVersion : '34',
+					loadedTextsVersion : '2015-12-11_11-47-19',
+					envName : "prod",					
+					isMobileApp:true,
+					appName:"portal"
+				}
+				
+				GlobalConfig.bidmoodEnv= ENV_NAME=="bidmood";
+				
+				GlobalConfig.jsCacheVersion = "";
+				GlobalConfig.cssCacheVersion = "";
+				GlobalConfig.templatesCacheVersion =  GlobalConfig.appVersion;
+				
+				GlobalConfig.devMode = false;
+				
+				debugMode = false;
+				
+		        var require = {
+		       		baseUrl: "./",	
+		       		urlArgs : debugMode ? 'v='+new Date().getTime() : ''
+			    };	
+		</script>
+		
+		<style>
+		body{
+			background:black;
+		}
+		.pgdebug.message{			
+			position:absolute;
+			z-index:1000;
+			width:400px;
+			height:500px;
+			background:white;
+			opacity:0.8;
+			right:0px;
+			overflow:auto;
+			top:0;
+			display:none;
+		}
+		.pgdebug.hide-button{			
+			position:absolute;
+			left:365px;
+			z-index:1001;
+			width:30px;
+			height:30px;
+			top:2px;
+			display:none;
+		}
+		
+		</style>
+
+
+		
+	</head>	
+	
+	<body >
+	
+	 
+		<div ng-controller="MainController" ng-show="loadState=='loaded'" class="main" id="mainView">				 	
+		 	<div  ui-view class="view"></div>
+		 	<input class="pgdebug hide-button" type="checkbox" ng-model="hideDebug"  ng-hide="hideDebug">
+		 	<div  id="pgDebugMessage" class="pgdebug message" ng-bind-html="debugMessage" ng-hide="hideDebug">	 	</div>
+		</div> 
+		
+		<script 
+			data-main='portal/js/all',			
+			src='common/js/lib/require.js'>
+		</script>
+				
+				
+		<img 
+			style="margin:20px auto;display:block;" 
+			src="common/images/system/pagePreLoader.gif"  
+			id="pagePreLoader"
+		>
+		
+		
+		<script>
+			if (debugMode){
+				var debugElements = document.querySelectorAll(".pgdebug");
+			   	for (var i=0;i< debugElements.length;i++){
+			   		debugElements[i].style.display="block";
+			   	}
+			   	setInterval(function(){document.getElementById("pgDebugMessage").scrollTop=100000;},1000);	
+			 }
+		</script>
+		
+		
+	</body>
+</Html>
+
+			
+	  	
