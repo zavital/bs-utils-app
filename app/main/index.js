@@ -1,12 +1,7 @@
 
 define([
-	'./portalMainModule',
-    './portalMainController',
-    './portalInfoService',
-    './portalTextsService',
-    './heartBeatService',
-    
-	'./portalStates'
+	'./utilsAppMainController',
+    './utilsAppMainModule',
     
 ],function () {});
 	
