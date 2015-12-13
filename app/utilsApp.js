@@ -11,7 +11,8 @@ define([
     return angular.module('utilsApp', [
         'ui.router',                               
         'utilsApp.modules',
-    ]).config(function($locationProvider){
+    ]).config(function($locationProvider,$sceProvider){
     	$locationProvider.hashPrefix('!');
+    	$sceProvider.enabled(false);
     });
 });

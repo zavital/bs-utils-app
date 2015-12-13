@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget version="34"
-    id="com.bidspirit.prod"
+    id="com.bidspirit.tools"
     xmlns="http://www.w3.org/ns/widgets" 
     xmlns:android = "http://schemas.android.com/apk/res/android"
     xmlns:gap="http://phonegap.com/ns/1.0"
     >
  
-    <name>Bidspirit</name>
+    <name>Bidspirit tools</name>
     <description>
-        The Bidspirit portal is your gate to the auction houses’ arena  trading in art, collectibles, jewelry, antiques, stamps, coins, old books, judaica, and more
+        Bidspirit tools
     </description>
     <author email="zemer@bidspirit.com" href="http://bidspirit.com">
         Zemer avital
@@ -23,7 +23,7 @@
     <gap:plugin name="org.apache.cordova.device" version="0.2.12" />
     <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
     <gap:plugin name="cordova-plugin-whitelist" source="npm" version="1.0.0"  />
-    <gap:plugin name="br.com.paveisitemas.splashscreen" version="2.1.1" />
+    
     <gap:plugin name="com.orcasinc.cordova.inappbrowser" version="1.0.3" />
     <gap:plugin name="com.ohh2ahh.plugins.appavailability" version="0.3.1" />
     <plugin name="com.phonegap.plugins.pushplugin" spec="2.5.0" source="pgb" />
@@ -40,7 +40,7 @@
         
     <icon src="icon.png" />
     
-    <icon src="icon-android.png" gap:platform="android" />
+    
     
     <icon src="icons/ios/ios_57x57.png" gap:platform="ios" width="57" height="57" />
 	<icon src="icons/ios/ios_72x72.png" gap:platform="ios" width="72" height="72" />
@@ -73,12 +73,8 @@
 	
 	
     
-    <gap:splash src="splash.png"/>
     
     
-	<preference name="SplashScreen" value="splash" />
-	<preference name="SplashScreenDelay" value="10000" />
-	<preference name="SplashMaintainAspectRatio" value="true" />
 	
 	
 	<gap:config-file platform="android" parent="/manifest/application">
@@ -94,32 +90,9 @@
 	
 	
 	
-	
-	<platform name="android"> 
-		<splash src="res/screen/android/splash.png" density="land-hdpi"/>
-		<splash src="res/screen/android/splash.png" density="land-ldpi"/>
-		<splash src="res/screen/android/splash.png" density="land-mdpi"/>
-		<splash src="res/screen/android/splash.png" density="land-xhdpi"/> 
-	</platform>
-	
-	
-	
-	
-	
-	<gap:splash src="splashes/ios/iphone_3_320x480.png" gap:platform="ios" width="320" height="480" />
-	<gap:splash src="splashes/ios/iphone_4_640x960.png" gap:platform="ios" width="640" height="960" />
-	<gap:splash src="splashes/ios/iphone_5_640x1136.png" gap:platform="ios" width="640" height="1136" />
-	<gap:splash src="splashes/ios/iphone_6_750x1334.png" gap:platform="ios" width="750" height="1334" />
-	<gap:splash src="splashes/ios/iphone_6_portrait_1242x2208.png" gap:platform="ios" width="1242" height="2208" />
-	<gap:splash src="splashes/ios/iphone_6_landscape_2208x1242.png" gap:platform="ios" width="2208" height="1242" />
-	<gap:splash src="splashes/ios/ipad_768x1024.png" gap:platform="ios" width="768" height="1024" />
-	<gap:splash src="splashes/ios/ipad_landscape_1024x768.png" gap:platform="ios" width="1024" height="768" />
-	<gap:splash src="splashes/ios/ipad_retina_1536x2048.png" gap:platform="ios" width="1536" height="2048" />
-	<gap:splash src="splashes/ios/ipad_retina_landscape_2048x1536.png" gap:platform="ios" width="2048" height="1536" />
-    
     
 	<preference name="orientation" value="portrait" />
-	<preference name="AutoHideSplashScreen" value="false" />
+	
 	<preference name="DisallowOverscroll" value="true" />
 	 
      
