@@ -6,7 +6,7 @@
     xmlns:gap="http://phonegap.com/ns/1.0"
     >
  
-    <name>Bidspirit tools</name>
+    <name>Tools</name>
     <description>
         Bidspirit tools
     </description>
@@ -32,6 +32,9 @@
     
     <plugin name="cordova-plugin-dialogs" spec="1.1.1" source="pgb" />
     
+    <plugin name="nl.x-services.plugins.calendar" spec="4.2.4" source="pgb" />
+    
+    <preference name="android-build-tool" value="gradle" />
     
     <gap:platform name="android" />
     <gap:platform name="ios" />
@@ -63,6 +66,16 @@
     <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="StatusBarBackgroundColor" value="#000000" />
     
+    <feature name="Calendar">
+	  <param name="android-package" value="nl.xservices.plugins.Calendar" />
+	</feature>
+	
+	<feature name="Calendar">
+    	<param name="ios-package" value="Calendar" />
+	</feature>
+
+
+    
     <feature name="PushPlugin">
   		<param name="ios-package" value="PushPlugin" />
 	</feature>
@@ -70,12 +83,6 @@
 	<feature name="PushPlugin" >
     	<param name="android-package" value="com.amazon.cordova.plugin.PushPlugin"/>
 	</feature>
-	
-	
-    
-    
-    
-	
 	
 	<gap:config-file platform="android" parent="/manifest/application">
     	<activity android:launchMode="singleInstance" />
