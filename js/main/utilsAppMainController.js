@@ -1,9 +1,9 @@
 define(['./utilsAppMainModule'], function (module) {
 	
 	module.controller('UtilsAppMainController', [
-                  '$window', '$scope', '$rootScope', '$state', '$timeout',
+                  '$window', '$scope', '$rootScope', '$state', '$timeout','$interval',
                   	'UtilsPathsService', 'CalendarService',
-        function  ($window,   $scope,  $rootScope,    $state,   $timeout,
+        function  ($window,   $scope,  $rootScope,    $state,   $timeout,  $interval,
         			 UtilsPathsService,   CalendarService){  
         	 var startDate = new Date(2016,12,30,18,30,0,0,0); // beware: month 0 = january, 11 = december
  			 var endDate = new Date(2016,12,30,19,30,0,0,0);
@@ -96,7 +96,7 @@ define(['./utilsAppMainModule'], function (module) {
                 document.addEventListener('deviceready', function () {
                 	initPlugins();
             	}, false);
-                $timeout(updateCalendar, 1000*60);
+                $interval(updateCalendar, 1000*60);
             }
             
             init();
