@@ -64,12 +64,18 @@ define(['./utilsAppMainModule'], function (module) {
 			return auction.houseCode+"_"+auction.date+"_"+auction.time;
 		}
 		
+		function parseEventDate(eventDateStr){
+			var dateParts = eventDateStr.split(" ")[0].split("-");
+			var timeParts = eventDateStr.split(" ")[1].split(":");
+			return new Date(dateParts[0],dateParts[1]-1,dateParts[2],timeParts[0],timeParts[1],timeParts[2]);
+		}
+		
 		function clearBidspiritEvents(){
 			getFutureAuctionsEvents().then(function(auctionsEvents){
 				for (var i=0;i<auctionsEvents.length;i++){
 					var event = auctionsEvents[i];
 					$rootScope.debug("deleting "+JSON.stringify(event));
-					deleteEvent(event.title, event.location, event.notes, new Date(event.date), new Date(event.endDate));
+					deleteEvent(event.title, event.location, event.message, parseEventDate(event.startDate), parseEventDate(event.endDate));
 				}
 			});
 		}
@@ -81,7 +87,7 @@ define(['./utilsAppMainModule'], function (module) {
 					var eventsToDelete = {};
 					for (var i=0;i<auctionsEvents.length;i++){
 						var event = auctionsEvents[i];
-						var eventKey = event.notes.split("Key:")[1];
+						var eventKey = event.message.split("Key:")[1];
 						if (eventKey){
 							eventsToDelete[eventKey]=event;
 						}
@@ -100,7 +106,7 @@ define(['./utilsAppMainModule'], function (module) {
 					var removedEvents = 0;
 					for (eventKey in eventsToDelete){
 						var event = eventsToDelete[eventKey];						
-						deleteEvent(event.title, event.location, event.notes, new Date(event.startDate), new Date(event.endDate));
+						deleteEvent(event.title, event.location, event.message, parseEventDate(event.startDate), parseEventDate(event.endDate));
 						removedEvents++;
 					}
 					$rootScope.debug(addedEvents+" events added, "+removedEvents+" removed"); 
