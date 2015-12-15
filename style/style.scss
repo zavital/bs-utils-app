@@ -1,10 +1,10 @@
-body{	
+body{
 	.pgdebug.message{			
 		position:absolute;
 		z-index:1000;
-		width:400px;
+		width:350px;
 		height:500px;
-		background:white;
+		background:#efefff;
 		opacity:0.8;
 		right:0px;
 		overflow:auto;
@@ -20,10 +20,13 @@ body{
 		top:2px;
 		display:none;
 	}
-	
+	[ui-view]{
+		position:relative;
+		z-index:1;
+	}
 	.main-page{
 		background:white;
-		font-size:30px;
+		font-size:30px;		
 		.button{
 			width:150px;
 			padding:3px;
@@ -33,3 +36,5 @@ body{
 		}
 	}
 }
+
+@import "common";

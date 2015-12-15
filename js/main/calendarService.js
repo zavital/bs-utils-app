@@ -17,24 +17,24 @@ define(['./utilsAppMainModule'], function (module) {
 		}
 		
 		function  listCalendars(){
-			window.plugins.calendar.listCalendars(debugSuccessCallback,debugErrorCallback);
+			window.plugins.calendar.listCalendars(debugSuccessCallback("listCalendars"),debugErrorCallback("listCalendars"));
 		}
 		
-		function  createEvent(startDate,endDate,title,eventLocation,notes){
-			window.plugins.calendar.createEvent(title,eventLocation,notes,startDate,endDate,debugSuccessCallback,debugErrorCallback);
+		function  createEvent(startDate,endDate,title,eventLocation,notes){			
+			window.plugins.calendar.createEvent(startDate,endDate,title,eventLocation,notes,debugSuccessCallback("createEvent"),debugErrorCallback("createEvent"));
 		}
 		
 		function  deleteEvent(title,eventLocation,notes){
-			window.plugins.calendar.deleteEvent(title, eventLocation, notes,debugSuccessCallback,debugErrorCallback);
+			window.plugins.calendar.deleteEvent(title, eventLocation, notes,debugSuccessCallback("deleteEvent"),debugErrorCallback("deleteEvent"));
 		}
 		
 		
 		function  listEventsInRange(startDate, endDate){
-			window.plugins.calendar.createEvent(startDate, endDate, debugSuccessCallback,debugErrorCallback);
+			window.plugins.calendar.createEvent(startDate, endDate, debugSuccessCallback("listEventsInRange"),debugErrorCallback("listEventsInRange"));
 		}
 		
 		function findAllEventsInCalendar(calendarName){
-			window.plugins.calendar.findAllEventsInNamedCalendar(calendarName, debugSuccessCallback, debugErrorCallback);
+			window.plugins.calendar.findAllEventsInNamedCalendar(calendarName, debugSuccessCallback("findAllEventsInCalendar"), debugErrorCallback("findAllEventsInCalendar"));
 		}
 		 
 		return {
