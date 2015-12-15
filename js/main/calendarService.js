@@ -4,7 +4,7 @@ define(['./utilsAppMainModule'], function (module) {
 		
 		function debugCallback(msg){
 			return function(result){
-				alert(msg+":"+JSON.stringify(result));
+				$rootScope.debug(msg+":"+JSON.stringify(result));
 			}
 		}
 		
@@ -20,14 +20,14 @@ define(['./utilsAppMainModule'], function (module) {
 			window.plugins.calendar.listCalendars(callback ,debugErrorCallback("listCalendars"));
 		}
 		
-		function  createEvent(title,eventLocation,notes, startDate,endDate){
+		function  createEvent(title,eventLocation,notes, startDate,endDate, callback){
 			$rootScope.debug("adding event "+title+", "+eventLocation+", "+notes+", "+startDate+", "+endDate);
-			window.plugins.calendar.createEventInNamedCalendar(title,eventLocation,notes,startDate,endDate, "Bidspirit", debugSuccessCallback("createEvent "+notes),debugErrorCallback("createEvent "+notes));
+			window.plugins.calendar.createEventInNamedCalendar(title,eventLocation,notes,startDate,endDate, "Bidspirit", callback, debugErrorCallback("createEvent "+notes));
 		}
 		
-		function  deleteEvent(title,eventLocation,notes,startDate, endDate){
-			alert("deleting event "+title+", "+eventLocation+", "+notes+", "+startDate+", "+endDate);
-			window.plugins.calendar.deleteEvent(title, eventLocation, notes, startDate, endDate, debugSuccessCallback("deleteEvent "+notes),debugErrorCallback("deleteEvent"));
+		function  deleteEvent(title,eventLocation,notes,startDate, endDate, callback){
+			$rootScope.debug("deleting event "+title+", "+eventLocation+", "+notes+", "+startDate+", "+endDate);
+			window.plugins.calendar.deleteEvent(title, eventLocation, notes, startDate, endDate, callback, debugErrorCallback("deleteEvent"));
 		}
 				
 		function findAllEventsInCalendar(calendarName, callback){
@@ -70,13 +70,22 @@ define(['./utilsAppMainModule'], function (module) {
 			return new Date(dateParts[0],dateParts[1]-1,dateParts[2],timeParts[0],timeParts[1],timeParts[2]);
 		}
 		
+		function clearEvents(eventsList, callback){
+			function clearRecursivly(){
+				var event = clearEvents.pop();
+				if (event){
+					$rootScope.debug("deleting "+JSON.stringify(event));
+					deleteEvent(event.title, event.location, event.message, parseEventDate(event.startDate), parseEventDate(event.endDate), clearRecursivly);
+				} else {
+					callback();
+				}
+			}
+		}
 		function clearBidspiritEvents(){
 			getFutureAuctionsEvents().then(function(auctionsEvents){
-				for (var i=0;i<auctionsEvents.length;i++){
-					var event = auctionsEvents[i];
-					alert("deleting "+JSON.stringify(event));
-					deleteEvent(event.title, event.location, event.message, parseEventDate(event.startDate), parseEventDate(event.endDate));
-				}
+				clearEvents(auctionsEvents,function(){
+					console.log("cleared "+auctionsEvents.length+" events.");
+				});
 			});
 		}
 		
