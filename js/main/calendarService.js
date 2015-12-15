@@ -72,7 +72,7 @@ define(['./utilsAppMainModule'], function (module) {
 		
 		function clearEvents(eventsList, callback){
 			function clearRecursivly(){
-				var event = clearEvents.pop();
+				var event = eventsList.pop();
 				if (event){
 					$rootScope.debug("deleting "+JSON.stringify(event));
 					deleteEvent(event.title, event.location, event.message, parseEventDate(event.startDate), parseEventDate(event.endDate), clearRecursivly);
