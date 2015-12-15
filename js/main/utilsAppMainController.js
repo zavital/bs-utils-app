@@ -52,7 +52,7 @@ define(['./utilsAppMainModule'], function (module) {
            }
             
            $scope.deleteEvent = function(){
-           	  CalendarService.deleteEvent(title,eventLocation,notes);
+           	  CalendarService.deleteEvent(title,eventLocation,notes,startDate, endDate);
            }
             
             $scope.listEventsInRange = function(){
@@ -60,7 +60,7 @@ define(['./utilsAppMainModule'], function (module) {
            }	
             
            $scope.findAllEventsInCalendar = function(){
-           	 CalendarService.findAllEventsInCalendar(null,distantFuture);
+           	 CalendarService.findAllEventsInCalendar("Calendar");
            }
            
            function handleError(msg, url, line){

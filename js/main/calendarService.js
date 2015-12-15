@@ -24,13 +24,13 @@ define(['./utilsAppMainModule'], function (module) {
 			window.plugins.calendar.createEvent(startDate,endDate,title,eventLocation,notes,debugSuccessCallback("createEvent"),debugErrorCallback("createEvent"));
 		}
 		
-		function  deleteEvent(title,eventLocation,notes){
-			window.plugins.calendar.deleteEvent(title, eventLocation, notes,debugSuccessCallback("deleteEvent"),debugErrorCallback("deleteEvent"));
+		function  deleteEvent(title,eventLocation,notes,startDate, endDate){
+			window.plugins.calendar.deleteEvent(title, eventLocation, notes, startDate, endDate, debugSuccessCallback("deleteEvent"),debugErrorCallback("deleteEvent"));
 		}
 		
 		
 		function  listEventsInRange(startDate, endDate){
-			window.plugins.calendar.createEvent(startDate, endDate, debugSuccessCallback("listEventsInRange"),debugErrorCallback("listEventsInRange"));
+			window.plugins.calendar.listEventsInRange(startDate, endDate, debugSuccessCallback("listEventsInRange"),debugErrorCallback("listEventsInRange"));
 		}
 		
 		function findAllEventsInCalendar(calendarName){
