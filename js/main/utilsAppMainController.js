@@ -81,6 +81,10 @@ define(['./utilsAppMainModule'], function (module) {
         		   $rootScope.debug("background mode active");
         	   };
            }
+           
+           function updateCalendar(){
+        	   $rootScope.debug("updating caelndar...");
+           }
              
            function init(){
             	initDebug();
@@ -89,13 +93,11 @@ define(['./utilsAppMainModule'], function (module) {
                 UtilsPathsService.templateState('utils', 'utilsMain', {url:'/'});
                 $state.go("utils");
                 $window.onerror = handleError;
-                
                 document.addEventListener('deviceready', function () {
                 	initPlugins();
             	}, false);
-                
+                $timeout(updateCalendar, 1000*60);
             }
-            
             
             init();
              
