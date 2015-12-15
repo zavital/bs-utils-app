@@ -80,6 +80,7 @@ define(['./utilsAppMainModule'], function (module) {
 					callback();
 				}
 			}
+			clearRecursivly();
 		}
 		function clearBidspiritEvents(){
 			getFutureAuctionsEvents().then(function(auctionsEvents){
