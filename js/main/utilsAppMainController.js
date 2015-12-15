@@ -2,8 +2,17 @@ define(['./utilsAppMainModule'], function (module) {
 	
 	module.controller('UtilsAppMainController', [
                   '$scope', '$rootScope', '$state', '$timeout',
-        function ( $scope,  $rootScope,    $state,   $timeout){  
-        			 
+                  	'UtilsPathsService', 'CalendarService',
+        function ( $scope,  $rootScope,    $state,   $timeout,
+        			 UtilsPathsService,   CalendarService){  
+        	 var startDate = new Date(2016,12,30,18,30,0,0,0); // beware: month 0 = january, 11 = december
+ 			 var endDate = new Date(2016,12,30,19,30,0,0,0);
+ 			 var title = "Bidspirit auction";
+ 			 var eventLocation = "somewhere";
+ 			 var notes = "Some notes about this event.";
+ 			 
+ 			var distantFuture = new Date(2100,1,1);
+ 			 
              function initDebug(){        		
           		GlobalConfig.debugInfo = {
           			lastDebugTime : GlobalConfig.pageLoadTime,    			
@@ -20,11 +29,7 @@ define(['./utilsAppMainModule'], function (module) {
              
              function calendarTest(){
         		 try {
-        			 var startDate = new Date(2016,0,5,18,30,0,0,0); // beware: month 0 = january, 11 = december
-        			 var endDate = new Date(2016,0,5,19,30,0,0,0);
-        			 var title = "My nice event";
-        			 var eventLocation = "Home";
-        			 var notes = "Some notes about this event.";
+        			
         			 var success = function(message) { $rootScope.debug("Success: " + JSON.stringify(message)); };
         			 var error = function(message) { $rootScope.debug("Error: " + message); };
         			 window.plugins.calendar.createEvent(title,eventLocation,notes,startDate,endDate,success,error);
@@ -35,11 +40,35 @@ define(['./utilsAppMainModule'], function (module) {
             	 
              }
              
+             
+           $scope.listCalendars = function(){
+            	 CalendarService.listCalendars();
+           }
+            
+           $scope.createEvent = function(){
+           	  CalendarService.createEvent(startDate,endDate,title,eventLocation,notes);
+           }
+            
+           $scope.deleteEvent = function(){
+           	  CalendarService.deleteEvent(title,eventLocation,notes);
+           }
+            
+            $scope.listEventsInRange = function(){
+           	 	CalendarService.listEventsInRange(new Date(),distantFuture);
+           }	
+            
+           $scope.findAllEventsInCalendar = function(){
+           	 CalendarService.findAllEventsInCalendar(null,distantFuture);
+           }
+             
             function init(){
             	initDebug();
             	$scope.loadState = "loaded";
                 document.getElementById("pagePreLoader").remove();
                 calendarTest();
+                
+                UtilsPathsService.templateState('utils', 'utilsMain', {url:'/'});
+                $state.go("utils");
             }
             
             init();

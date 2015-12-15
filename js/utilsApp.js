@@ -2,7 +2,7 @@
 define([
     'angular',
     'lib/angular-ui-router',
-    'app/utilsAppModules'
+    'js/utilsAppModules'
     
 ], function (angular) {
     'use strict';
@@ -11,8 +11,9 @@ define([
     return angular.module('utilsApp', [
         'ui.router',                               
         'utilsApp.modules',
-    ]).config(function($locationProvider,$sceProvider){
+    ]).config(function($locationProvider,$sceProvider,$stateProvider){    	
     	$locationProvider.hashPrefix('!');
     	$sceProvider.enabled(false);
+    	window.$stateProvider = $stateProvider;
     });
 });

@@ -5,7 +5,7 @@
 		paths: {
 	        "angular": "lib/angular",
 	        "domReady": "lib/domReady",
-	        "utilsApp":"app/utilsApp"
+	        "utilsApp":"js/utilsApp"
 	    },
 	    
 	    shim: {
@@ -25,7 +25,7 @@
 	    },
 	    
 	    deps: [         
-	       'app/utilsAppBootstrap'
+	       'js/utilsAppBootstrap'
 	   ]
 	});
 })();
