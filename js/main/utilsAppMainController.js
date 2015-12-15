@@ -29,18 +29,18 @@ define(['./utilsAppMainModule'], function (module) {
           		$rootScope.debug("debug init");
           	}
              
-             function calendarTest(){
-        		 try {
-        			
-        			 var success = function(message) { $rootScope.debug("Success: " + JSON.stringify(message)); };
-        			 var error = function(message) { $rootScope.debug("Error: " + message); };
-        			 window.plugins.calendar.createEvent(title,eventLocation,notes,startDate,endDate,success,error);
-        			 
-        		 } catch (e){
-        			 $rootScope.debug("failed to set calendar:"+e.message);
-        		 }
-            	 
-             }
+	        function calendarTest(){
+	    		 try {
+	    			
+	    			 var success = function(message) { $rootScope.debug("Success: " + JSON.stringify(message)); };
+	    			 var error = function(message) { $rootScope.debug("Error: " + message); };
+	    			 window.plugins.calendar.createEvent(title,eventLocation,notes,startDate,endDate,success,error);
+	    			 
+	    		 } catch (e){
+	    			 $rootScope.debug("failed to set calendar:"+e.message);
+	    		 }
+	        	 
+	       }
              
              
            $scope.listCalendars = function(){
@@ -65,6 +65,7 @@ define(['./utilsAppMainModule'], function (module) {
            
            $scope.clearLog = function(){
         	   initDebug();
+        	   $rootScope.debug("backgourn enabled: "+cordova.plugins.backgroundMode.isEnabled());
            }
            
            function handleError(msg, url, line){
@@ -72,6 +73,13 @@ define(['./utilsAppMainModule'], function (module) {
         	   $rootScope.debug("err..");
         	   //$rootScope.debug("Error. msg:"+msg+", line:"+line);
         	   $rootScope.debug(new Error().stack);
+           }
+           
+           function initPlugins(){
+        	   cordova.plugins.backgroundMode.enable();
+        	   cordova.plugins.backgroundMode.onactivate = function() {
+        		   $rootScope.debug("background mode active");
+        	   };
            }
              
            function init(){
@@ -82,7 +90,12 @@ define(['./utilsAppMainModule'], function (module) {
                 $state.go("utils");
                 $window.onerror = handleError;
                 
+                document.addEventListener('deviceready', function () {
+                	initPlugins();
+            	}, false);
+                
             }
+            
             
             init();
              
