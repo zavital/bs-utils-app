@@ -22,7 +22,7 @@ define(['./utilsAppMainModule'], function (module) {
 		
 		function  createEvent(title,eventLocation,notes, startDate,endDate){
 			$rootScope.debug("adding event "+title+", "+eventLocation+", "+notes+", "+startDate+", "+endDate);
-			window.plugins.calendar.createEvent(title,eventLocation,notes,startDate,endDate,debugSuccessCallback("createEvent "+notes),debugErrorCallback("createEvent "+notes));
+			window.plugins.calendar.createEventInNamedCalendar(title,eventLocation,notes,startDate,endDate, "Bidspirit", debugSuccessCallback("createEvent "+notes),debugErrorCallback("createEvent "+notes));
 		}
 		
 		function  deleteEvent(title,eventLocation,notes,startDate, endDate){
@@ -64,10 +64,19 @@ define(['./utilsAppMainModule'], function (module) {
 			return auction.houseCode+"_"+auction.date+"_"+auction.time;
 		}
 		
+		function clearBidspiritEvents(){
+			getFutureAuctionsEvents().then(function(auctionsEvents){
+				for (var i=0;i<auctionsEvents.length;i++){
+					var event = auctionsEvents[i];
+					deleteEvent(event.title, event.location, event.notes, new Date(event.date), new Date(event.endDate));
+				}
+			});
+		}
+		
 		function syncAuctionEvents(auctions){
 			validateBidspiritCalendarExists(function(){
 				getFutureAuctionsEvents().then(function(auctionsEvents){
-					$rootScope.debug("got "+auctionsEvents+" future events.");
+					$rootScope.debug("got "+auctionsEvents.length+" future events.");
 					var eventsToDelete = {};
 					for (var i=0;i<auctionsEvents.length;i++){
 						var event = auctionsEvents[i];
@@ -108,7 +117,9 @@ define(['./utilsAppMainModule'], function (module) {
 			deleteEvent:deleteEvent,
 			findAllEventsInCalendar:findAllEventsInCalendar,
 			
-			syncAuctionEvents:syncAuctionEvents
+			syncAuctionEvents:syncAuctionEvents,
+			clearBidspiritEvents:clearBidspiritEvents
+			
 		}
 		
 		

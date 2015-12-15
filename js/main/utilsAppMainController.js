@@ -106,6 +106,10 @@ define(['./utilsAppMainModule'], function (module) {
         		   
         	   });
            };
+           
+           $scope.clearBidspiritEvents=function(){
+        	   CalendarService.clearBidspiritEvents();
+           }
              
            function init(){
             	initDebug();
