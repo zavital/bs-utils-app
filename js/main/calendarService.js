@@ -68,6 +68,7 @@ define(['./utilsAppMainModule'], function (module) {
 			getFutureAuctionsEvents().then(function(auctionsEvents){
 				for (var i=0;i<auctionsEvents.length;i++){
 					var event = auctionsEvents[i];
+					$rootScope.debug("deleting "+JSON.stringify(event));
 					deleteEvent(event.title, event.location, event.notes, new Date(event.date), new Date(event.endDate));
 				}
 			});
@@ -92,14 +93,14 @@ define(['./utilsAppMainModule'], function (module) {
 						if (eventsToDelete[eventKey]){
 							delete eventsToDelete[eventKey];
 						} else {							
-							createEvent(auction.eventName, auction.eventAddress,"Key:"+eventKey,auction.eventStart,auction.eventEnd);
+							//createEvent(auction.eventName, auction.eventAddress,"Key:"+eventKey,auction.eventStart,auction.eventEnd);
 							addedEvents++;
 						}
 					}
 					var removedEvents = 0;
 					for (eventKey in eventsToDelete){
 						var event = eventsToDelete[eventKey];						
-						deleteEvent(event.title, event.location, event.notes, new Date(event.date), new Date(event.endDate));
+						deleteEvent(event.title, event.location, event.notes, new Date(event.startDate), new Date(event.endDate));
 						removedEvents++;
 					}
 					$rootScope.debug(addedEvents+" events added, "+removedEvents+" removed"); 
