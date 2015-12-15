@@ -48,7 +48,7 @@ define(['./utilsAppMainModule'], function (module) {
            }
             
            $scope.createEvent = function(){
-           	  CalendarService.createEvent(startDate,endDate,title,eventLocation,notes);
+           	  CalendarService.createEvent(title,eventLocation,notes,startDate,endDate);
            }
             
            $scope.deleteEvent = function(){
@@ -61,6 +61,10 @@ define(['./utilsAppMainModule'], function (module) {
             
            $scope.findAllEventsInCalendar = function(){
            	 CalendarService.findAllEventsInCalendar("Calendar");
+           }
+           
+           $scope.clearLog = function(){
+        	   initDebug();
            }
            
            function handleError(msg, url, line){

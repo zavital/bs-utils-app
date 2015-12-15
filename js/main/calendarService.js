@@ -20,8 +20,8 @@ define(['./utilsAppMainModule'], function (module) {
 			window.plugins.calendar.listCalendars(debugSuccessCallback("listCalendars"),debugErrorCallback("listCalendars"));
 		}
 		
-		function  createEvent(startDate,endDate,title,eventLocation,notes){			
-			window.plugins.calendar.createEvent(startDate,endDate,title,eventLocation,notes,debugSuccessCallback("createEvent"),debugErrorCallback("createEvent"));
+		function  createEvent(title,eventLocation,notes, startDate,endDate){			
+			window.plugins.calendar.createEvent(title,eventLocation,notes,startDate,endDate,debugSuccessCallback("createEvent"),debugErrorCallback("createEvent"));
 		}
 		
 		function  deleteEvent(title,eventLocation,notes,startDate, endDate){
