@@ -18,7 +18,11 @@ define([
     	$provide.decorator("$exceptionHandler", function($delegate, $injector){
 	        return function(exception, cause){
 	            var $rootScope = $injector.get("$rootScope");
-	            $rootScope.debug(exception.stack);
+	            if ($rootScope.debug){
+	            	$rootScope.debug(exception.stack);
+	            } else {
+	            	console.log(exception.stack);
+	            }
 	            
 	            $delegate(exception, cause);
 	        };

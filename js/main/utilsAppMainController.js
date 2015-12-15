@@ -1,17 +1,13 @@
 define(['./utilsAppMainModule'], function (module) {
 	
 	module.controller('UtilsAppMainController', [
-                  '$window', '$scope', '$rootScope', '$state', '$timeout','$interval',
+                  '$q', '$window', '$scope', '$rootScope', '$state', '$timeout','$interval','$http',
                   	'UtilsPathsService', 'CalendarService',
-        function  ($window,   $scope,  $rootScope,    $state,   $timeout,  $interval,
-        			 UtilsPathsService,   CalendarService){  
-        	 var startDate = new Date(2016,12,30,18,30,0,0,0); // beware: month 0 = january, 11 = december
- 			 var endDate = new Date(2016,12,30,19,30,0,0,0);
- 			 var title = "Bidspirit auction";
- 			 var eventLocation = "somewhere";
- 			 var notes = "Some notes about this event.";
+        function  ($q, $window,   $scope,  $rootScope,    $state,   $timeout,  $interval,  $http,
+        		     UtilsPathsService,   CalendarService){  
+        	
  			 
- 			var distantFuture = new Date(2100,1,1);
+ 			var timeZonesMap ={};
  			 
              function initDebug(){        		
           		GlobalConfig.debugInfo = {
@@ -29,51 +25,27 @@ define(['./utilsAppMainModule'], function (module) {
           		$rootScope.debug("debug init");
           	}
              
-	        function calendarTest(){
-	    		 try {
-	    			
-	    			 var success = function(message) { $rootScope.debug("Success: " + JSON.stringify(message)); };
-	    			 var error = function(message) { $rootScope.debug("Error: " + message); };
-	    			 window.plugins.calendar.createEvent(title,eventLocation,notes,startDate,endDate,success,error);
-	    			 
-	    		 } catch (e){
-	    			 $rootScope.debug("failed to set calendar:"+e.message);
-	    		 }
-	        	 
-	       }
+            function initTimeZonesMap(){
+            	var deferred = $q.defer();
+            	$rootScope.debug("init time zones map...");
+            	$http.get("http://api.timezonedb.com/?zone=Asia/Jerusalem&key=NKJH8T83ZVJJ&format=json").then(function(response){
+            		timeZonesMap.il =  response.data.gmtOffset;
+            		$http.get("http://api.timezonedb.com/?zone=Europe/Moscow&key=NKJH8T83ZVJJ&format=json").then(function(response){
+            			timeZonesMap.ru =  response.data.gmtOffset;
+            			$rootScope.debug("got timezones map..."+JSON.stringify(timeZonesMap));
+            			deferred.resolve();
+            		});
+            	});
+            	return deferred.promise;
+            }
              
-             
-           $scope.listCalendars = function(){
-            	 CalendarService.listCalendars();
-           }
-            
-           $scope.createEvent = function(){
-           	  CalendarService.createEvent(title,eventLocation,notes,startDate,endDate);
-           }
-            
-           $scope.deleteEvent = function(){
-           	  CalendarService.deleteEvent(title,eventLocation,notes,startDate, endDate);
-           }
-            
-            $scope.listEventsInRange = function(){
-           	 	CalendarService.listEventsInRange(new Date(),distantFuture);
-           }	
-            
-           $scope.findAllEventsInCalendar = function(){
-           	 CalendarService.findAllEventsInCalendar("Calendar");
-           }
            
            $scope.clearLog = function(){
         	   initDebug();
         	   $rootScope.debug("backgourn enabled: "+cordova.plugins.backgroundMode.isEnabled());
            }
            
-           function handleError(msg, url, line){
-        	   console.log("error");
-        	   $rootScope.debug("err..");
-        	   //$rootScope.debug("Error. msg:"+msg+", line:"+line);
-        	   $rootScope.debug(new Error().stack);
-           }
+           
            
            function initPlugins(){
         	   cordova.plugins.backgroundMode.enable();
@@ -82,21 +54,75 @@ define(['./utilsAppMainModule'], function (module) {
         	   };
            }
            
-           function updateCalendar(){
-        	   $rootScope.debug("updating caelndar...");
+           function getLangField(field){
+        	   if (!field) return "";
+        	   return field['he'] || field['en'] || field['ru'] || 'unknown';
            }
+           
+           $scope.updateCalendar = function(){
+        	   $rootScope.debug("updating calendar...");
+        	   $http.get("https://bidspirit.com/services/portal/getPortalInfo?includeOldAuctions=false").then(function(response){
+        		   var data = response.data;
+        		   var auctionsToUpdate = [];
+        		   var houseNames = {};
+        		   for (var i=0;i<data.housesDetails.length;i++){
+        			   var houseDetails = data.housesDetails[i];
+        			   houseNames[houseDetails.auctionHouseId] = getLangField(houseDetails.name) 
+        		   }
+        		   var ruToIlDiff = (timeZonesMap["IL"]-timeZonesMap["RU"])/3600
+        		   for (var i=0;i<data.auctions.length;i++){
+        			   var auction = data.auctions[i];
+        			   if (new Date(auction.date).getTime()-new Date().getTime() > 0){
+        				   var dateParts = auction.date.split("-");
+        				   var timeParts = auction.time ? auction.time.split(":") : [];
+        				   if (timeParts.length<2){
+        					   timeParts=[23,59];
+        				   } else {
+        					   if (auction.region=="RU"){
+        						   timeParts[0] = timeParts[0]*1 + ruToIlDiff ;
+        					   }
+        				   }
+        				   auction.eventStart = new Date(dateParts[0]*1,dateParts[1]*1-1,dateParts[2]*1,timeParts[0]*1,timeParts[1]*1);
+        				   auction.eventEnd = new Date(auction.eventStart.getTime()+1000*60*60*4);
+        				   auction.eventName = houseNames[auction.houseId];
+        				   if (auction.number){
+        					   auction.eventName+=" מכירה "+auction.number;
+        					   if (auction.part){
+        						   auction.eventName+=" חלק "+auction.part;
+        					   }
+        				   } else {
+        					   auction.eventName="מכירה "+auction.eventName;
+        				   }
+        				   auction.eventAddress = getLangField(auction.address);
+        				   auctionsToUpdate.push(auction);
+        				   
+        			   }
+        		   }
+        		   $rootScope.debug(auctionsToUpdate.length+" relevant auctions");
+        		   
+        		   console.log(auctionsToUpdate);
+        		   
+        		   CalendarService.syncAuctionEvents(auctionsToUpdate);
+        		   
+        	   });
+           };
              
            function init(){
             	initDebug();
             	$scope.loadState = "loaded";
-                document.getElementById("pagePreLoader").remove();                                
+                document.getElementById("pagePreLoader").remove();
                 UtilsPathsService.templateState('utils', 'utilsMain', {url:'/'});
                 $state.go("utils");
-                $window.onerror = handleError;
+                
+                
                 document.addEventListener('deviceready', function () {
                 	initPlugins();
             	}, false);
-                $interval(updateCalendar, 1000*60);
+                $interval($scope.updateCalendar, 1000*60*60);
+                
+                initTimeZonesMap().then(function(){
+                	$scope.updateCalendar();
+                });
             }
             
             init();
