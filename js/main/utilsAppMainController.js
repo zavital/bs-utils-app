@@ -1,9 +1,9 @@
 define(['./utilsAppMainModule'], function (module) {
 	
 	module.controller('UtilsAppMainController', [
-                  '$scope', '$rootScope', '$state', '$timeout',
+                  '$window', '$scope', '$rootScope', '$state', '$timeout',
                   	'UtilsPathsService', 'CalendarService',
-        function ( $scope,  $rootScope,    $state,   $timeout,
+        function  ($window,   $scope,  $rootScope,    $state,   $timeout,
         			 UtilsPathsService,   CalendarService){  
         	 var startDate = new Date(2016,12,30,18,30,0,0,0); // beware: month 0 = january, 11 = december
  			 var endDate = new Date(2016,12,30,19,30,0,0,0);
@@ -19,10 +19,12 @@ define(['./utilsAppMainModule'], function (module) {
           			count:0,
           		};    		
           		$rootScope.debugMessage = "";
-          		$rootScope.debug = function(msg){    			
-          			var now =  new Date();
-      	    		$rootScope.debugMessage += "\n<Br> ("+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds()+"["+now.getMilliseconds()+"]) "+msg;
-      	    		GlobalConfig.debugInfo.lastDebugTime = now.getTime();
+          		$rootScope.debug = function(msg){
+          			$timeout(function(){
+	          			var now =  new Date();
+	      	    		$rootScope.debugMessage += "\n<Br> ("+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds()+"["+now.getMilliseconds()+"]) "+msg;
+	      	    		GlobalConfig.debugInfo.lastDebugTime = now.getTime();
+          			},50);	
       	    	}
           		$rootScope.debug("debug init");
           	}
@@ -60,15 +62,22 @@ define(['./utilsAppMainModule'], function (module) {
            $scope.findAllEventsInCalendar = function(){
            	 CalendarService.findAllEventsInCalendar(null,distantFuture);
            }
+           
+           function handleError(msg, url, line){
+        	   console.log("error");
+        	   $rootScope.debug("err..");
+        	   //$rootScope.debug("Error. msg:"+msg+", line:"+line);
+        	   $rootScope.debug(new Error().stack);
+           }
              
-            function init(){
+           function init(){
             	initDebug();
             	$scope.loadState = "loaded";
-                document.getElementById("pagePreLoader").remove();
-                calendarTest();
-                
+                document.getElementById("pagePreLoader").remove();                                
                 UtilsPathsService.templateState('utils', 'utilsMain', {url:'/'});
                 $state.go("utils");
+                $window.onerror = handleError;
+                
             }
             
             init();
