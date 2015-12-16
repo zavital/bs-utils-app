@@ -29,9 +29,9 @@ define(['./utilsAppMainModule'], function (module) {
             	var deferred = $q.defer();
             	$rootScope.debug("init time zones map...");
             	$http.get("http://api.timezonedb.com/?zone=Asia/Jerusalem&key=NKJH8T83ZVJJ&format=json").then(function(response){
-            		timeZonesMap.il =  response.data.gmtOffset;
+            		timeZonesMap.il =  response.data.gmtOffset*1;
             		$http.get("http://api.timezonedb.com/?zone=Europe/Moscow&key=NKJH8T83ZVJJ&format=json").then(function(response){
-            			timeZonesMap.ru =  response.data.gmtOffset;
+            			timeZonesMap.ru =  response.data.gmtOffset*1;
             			$rootScope.debug("got timezones map..."+JSON.stringify(timeZonesMap));
             			deferred.resolve();
             		});
@@ -72,7 +72,7 @@ define(['./utilsAppMainModule'], function (module) {
         			   var houseDetails = data.housesDetails[i];
         			   houseNames[houseDetails.auctionHouseId] = getLangField(houseDetails.name) 
         		   }
-        		   var ruToIlDiff = (timeZonesMap["IL"]-timeZonesMap["RU"])/3600
+        		   var ruToIlDiff = (timeZonesMap["il"]-timeZonesMap["ru"])/3600
         		   for (var i=0;i<data.auctions.length;i++){
         			   var auction = data.auctions[i];
         			   var isFutureAuction = new Date(auction.date).getTime()-new Date().getTime() > -1000*60*60*24; 

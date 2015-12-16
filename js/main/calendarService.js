@@ -22,7 +22,7 @@ define(['./utilsAppMainModule'], function (module) {
 		}
 		
 		function  createEvent(title,eventLocation,notes, startDate,endDate, callback){
-			alert("adding event "+title+", "+eventLocation+", "+notes+", "+startDate+", "+endDate);
+			$rootScope.debug("adding event "+title+", "+eventLocation+", "+notes+", "+startDate+", "+endDate);
 			window.plugins.calendar.createEvent(title,eventLocation,notes,startDate,endDate, callback, debugErrorCallback("createEvent "+notes));
 		}
 		
@@ -91,7 +91,7 @@ define(['./utilsAppMainModule'], function (module) {
 				var auction = auctionsList.pop();
 				if (auction){
 					var eventKey = getAuctionEventKey(auction);
-					alert("creating "+eventKey);
+					$rootScope.debug("creating "+eventKey);
 					createEvent(auction.eventName, auction.eventAddress,EVENT_KEY_PREFIX+eventKey, auction.eventStart, auction.eventEnd, addRecursivly);
 				} else {
 					callback();
@@ -137,7 +137,7 @@ define(['./utilsAppMainModule'], function (module) {
 				}
 				addAuctionEvents(auctionEventsList,function(){
 					$rootScope.debug(addedEvents+" events added");
-				});
+				}
 				
 				var removedEvents = 0;
 				var eventsToDeleteList = [];
