@@ -135,12 +135,12 @@ define(['./utilsAppMainModule'], function (module) {
            
            
            $scope.testRemove=function(){           
-        	   var startDate = new Date(2015,11,30,18,30,0,0,0); // beware: month 0 = january, 11 = december
-        	   var endDate = new Date(2015,11,30,19,30,0,0,0);
+        	   var startDate = new Date(2015,11,30,8,30,0,0,0); // beware: month 0 = january, 11 = december
+        	   var endDate = new Date(2015,11,30,19,40,0,0,0);
         	   var title = "Bidspirit auction";
         	   var eventLocation = "somewhere";
         	   var notes = "Some notes about this event.";
-          	   CalendarService.deleteEvent(title,eventLocation,notes,startDate,endDate,function(){
+          	   CalendarService.deleteEvent(null,null,null,startDate,endDate,function(){
           		 $rootScope.debug("deleted eng event");
           		 var hebStartDate = new Date(2015,11,30,10,30,0,0,0); // beware: month 0 = january, 11 = december
           		 var hebEndDate = new Date(2015,11,30,11,30,0,0,0);
