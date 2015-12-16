@@ -22,12 +22,14 @@ define(['./utilsAppMainModule'], function (module) {
 		}
 		
 		function  createEvent(title,eventLocation,notes, startDate,endDate, callback){
-			$rootScope.debug("adding event "+title+", "+eventLocation+", "+notes+", "+startDate+", "+endDate);
+			//$rootScope.debug("adding event "+title+", "+eventLocation+", "+notes+", "+startDate+", "+endDate);
+			$rootScope.debug("adding event "+notes);
 			window.plugins.calendar.createEvent(title,eventLocation,notes,startDate,endDate, callback, debugErrorCallback("createEvent "+notes));
 		}
 		
 		function  deleteEvent(title,eventLocation,notes,startDate, endDate, callback){
-			$rootScope.debug("deleting event "+title+", "+eventLocation+", "+notes+", "+startDate+", "+endDate);
+			//$rootScope.debug("deleting event "+title+", "+eventLocation+", "+notes+", "+startDate+", "+endDate);
+			$rootScope.debug("deleting event "+notes);
 			window.plugins.calendar.deleteEvent(title, eventLocation, notes, startDate, endDate, callback, debugErrorCallback("deleteEvent"));
 		}
 				
@@ -76,8 +78,7 @@ define(['./utilsAppMainModule'], function (module) {
 		function clearEvents(eventsList, callback){
 			function clearRecursivly(){
 				var event = eventsList.pop();
-				if (event){
-					$rootScope.debug("deleting "+JSON.stringify(event));
+				if (event){					
 					deleteEvent(null, null, event.message, parseEventDate(event.startDate,-1000*60*60*24), parseEventDate(event.endDate+1000*60*60*24), clearRecursivly);
 				} else {
 					callback();
