@@ -76,7 +76,7 @@ define(['./utilsAppMainModule'], function (module) {
         		   for (var i=0;i<data.auctions.length;i++){
         			   var auction = data.auctions[i];
         			   var isFutureAuction = new Date(auction.date).getTime()-new Date().getTime() > -1000*60*60*24; 
-        			   if (!auction.hidden && !auction.catalogOnly && isFutureAuction){
+        			   if (!auction.hidden && !auction.catalogOnly && isFutureAuction && auction.auctionIdInApp){
         				   var dateParts = auction.date.split("-");
         				   var timeParts = auction.time ? auction.time.split(":") : [];
         				   if (timeParts.length<2){
