@@ -1,7 +1,8 @@
 define(['./utilsAppMainModule'], function (module) {
 	module.factory('CalendarService', function(
 			$q, $rootScope, $timeout){
-		
+		var future = new Date(2100,1,1);
+		var BIDSPIRIT_CALENDAR_NAME = "Bidspirit";
 		function debugCallback(msg){
 			return function(result){
 				$rootScope.debug(msg+":"+JSON.stringify(result));
@@ -22,7 +23,7 @@ define(['./utilsAppMainModule'], function (module) {
 		
 		function  createEvent(title,eventLocation,notes, startDate,endDate, callback){
 			$rootScope.debug("adding event "+title+", "+eventLocation+", "+notes+", "+startDate+", "+endDate);
-			window.plugins.calendar.createEventInNamedCalendar(title,eventLocation,notes,startDate,endDate, "Bidspirit", callback, debugErrorCallback("createEvent "+notes));
+			window.plugins.calendar.createEventInNamedCalendar(title,eventLocation,notes,startDate,endDate, BIDSPIRIT_CALENDAR_NAME, callback, debugErrorCallback("createEvent "+notes));
 		}
 		
 		function  deleteEvent(title,eventLocation,notes,startDate, endDate, callback){
@@ -38,13 +39,13 @@ define(['./utilsAppMainModule'], function (module) {
 		function validateBidspiritCalendarExists(callback){
 			listCalendars(function(calendars){
 				for (var i=0;i<calendars.length;i++){
-					if (calendars[i].name=="Bidspirit") {
+					if (calendars[i].name==BIDSPIRIT_CALENDAR_NAME) {
 						$rootScope.debug("Found Bidspirit's calendar");
 						callback();
 						return;
 					}
 				}
-				window.plugins.calendar.createCalendar("Bidspirit",callback,debugErrorCallback("Failed to create calendar"));
+				window.plugins.calendar.createCalendar(BIDSPIRIT_CALENDAR_NAME,callback,debugErrorCallback("Failed to create calendar"));
 			});
 		}
 		
@@ -52,7 +53,7 @@ define(['./utilsAppMainModule'], function (module) {
 			var deferred = $q.defer();
 			var getListFn;
 			
-			findAllEventsInCalendar("Bidspirit", function(result){
+			findAllEventsInCalendar(BIDSPIRIT_CALENDAR_NAME, function(result){
 				deferred.resolve(result);
 			});
 			return deferred.promise;
@@ -75,7 +76,9 @@ define(['./utilsAppMainModule'], function (module) {
 				var event = eventsList.pop();
 				if (event){
 					$rootScope.debug("deleting "+JSON.stringify(event));
-					deleteEvent(event.title, event.location, event.message, parseEventDate(event.startDate), parseEventDate(event.endDate), clearRecursivly);
+					//deleteEvent(event.title, event.location, event.message, parseEventDate(event.startDate), parseEventDate(event.endDate), clearRecursivly);
+					window.plugins.calendar.deleteEventFromNamedCalendar(null, null, event.message, new Date(), future, BIDSPIRIT_CALENDAR_NAME,
+							debugSuccessCallback("clearBidspiritEvents"), debugErrorCallback("deleteEvent"));
 				} else {
 					callback();
 				}
@@ -83,11 +86,14 @@ define(['./utilsAppMainModule'], function (module) {
 			clearRecursivly();
 		}
 		function clearBidspiritEvents(){
-			getFutureAuctionsEvents().then(function(auctionsEvents){
+			/*getFutureAuctionsEvents().then(function(auctionsEvents){
 				clearEvents(auctionsEvents,function(){
 					console.log("cleared "+auctionsEvents.length+" events.");
 				});
-			});
+			});*/
+			
+			window.plugins.calendar.deleteEventFromNamedCalendar(title, eventLocation, notes, new Date(), future, BIDSPIRIT_CALENDAR_NAME,
+					debugSuccessCallback("clearBidspiritEvents"), debugErrorCallback("deleteEvent"));
 		}
 		
 		function syncAuctionEvents(auctions){
@@ -109,14 +115,16 @@ define(['./utilsAppMainModule'], function (module) {
 						if (eventsToDelete[eventKey]){
 							delete eventsToDelete[eventKey];
 						} else {							
-							//createEvent(auction.eventName, auction.eventAddress,"Key:"+eventKey,auction.eventStart,auction.eventEnd);
+							createEvent(auction.eventName, auction.eventAddress,"Key:"+eventKey,auction.eventStart,auction.eventEnd);
 							addedEvents++;
 						}
 					}
+					$rootScope.debug(addedEvents+" events added");
 					var removedEvents = 0;
+					var eventsToDeleteList = [];
 					for (eventKey in eventsToDelete){
-						var event = eventsToDelete[eventKey];						
-						deleteEvent(event.title, event.location, event.message, parseEventDate(event.startDate), parseEventDate(event.endDate));
+						var event = eventsToDelete[eventKey];
+						eventsToDeleteList.push(event);						
 						removedEvents++;
 					}
 					$rootScope.debug(addedEvents+" events added, "+removedEvents+" removed"); 
