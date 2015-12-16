@@ -85,6 +85,21 @@ define(['./utilsAppMainModule'], function (module) {
 			}
 			clearRecursivly();
 		}
+		
+		function addAuctionEvents(auctionsList, callback){
+			function addRecursivly(){
+				var auction = auctionsList.pop();
+				if (auction){
+					var eventKey = getAuctionEventKey(auction);
+					$rootScope.debug("creating "+eventKey);
+					createEvent(auction.eventName, auction.eventAddress,EVENT_KEY_PREFIX+eventKey, auction.eventStart, auction.eventEnd, addRecursivly);
+				} else {
+					callback();
+				}
+			}
+			addRecursivly();
+		}
+		
 		function clearBidspiritEvents(){
 			/*getFutureAuctionsEvents().then(function(auctionsEvents){
 				clearEvents(auctionsEvents,function(){
@@ -109,17 +124,20 @@ define(['./utilsAppMainModule'], function (module) {
 					}
 				}	
 				var addedEvents = 0;
+				var auctionEventsList = [];
 				for (var i=0;i<auctions.length;i++){
 					var auction = auctions[i];
 					var eventKey = getAuctionEventKey(auction);
 					if (eventsToDelete[eventKey]){
 						delete eventsToDelete[eventKey];
-					} else {							
-						createEvent(auction.eventName, auction.eventAddress,EVENT_KEY_PREFIX+eventKey,auction.eventStart,auction.eventEnd, debugSuccessCallback("created "+eventKey));
+					} else {		
+						auctionEventsList.push(auction);
 						addedEvents++;
 					}
 				}
-				$rootScope.debug(addedEvents+" events added");
+				addAuctionEvents(auctionEventsList,function(){
+					$rootScope.debug(addedEvents+" events added");
+				});
 				
 				var removedEvents = 0;
 				var eventsToDeleteList = [];
