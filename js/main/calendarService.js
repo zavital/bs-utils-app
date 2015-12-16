@@ -1,8 +1,8 @@
 define(['./utilsAppMainModule'], function (module) {
 	module.factory('CalendarService', function(
 			$q, $rootScope, $timeout){
-		var future = new Date(2100,1,1);
-		var BIDSPIRIT_CALENDAR_NAME = "Bidspirit";
+		var nextYear = new Date(new Date().getTime()+1000*60*60*24*365);
+		var EVENT_KEY_PREFIX = "Key:";
 		function debugCallback(msg){
 			return function(result){
 				$rootScope.debug(msg+":"+JSON.stringify(result));
@@ -41,10 +41,17 @@ define(['./utilsAppMainModule'], function (module) {
 		function getFutureAuctionsEvents(){
 			var deferred = $q.defer();
 			var getListFn;
-			
-			window.plugins.calendar.findEvent(null,null,null,new Date(),future, function(result){
-				$rootScope.debug("found "+result.length+" results."); 
-				deferred.resolve(result);
+			window.plugins.calendar.findEvent(null,null,null,new Date(),nextYear, function(results){
+				$rootScope.debug("found "+results.length+" results."); 
+				$rootScope.debug("first event:"+JSON.stringify(results[0]));
+				var bidspiritEvents = [];
+				for (var i=0;i<results.length;i++){
+					var event = results[i];
+					if (event.message && event.message.indexOf(EVENT_KEY_PREFIX)==0){
+						bidspiritEvents.push(event);
+					}
+				};
+				deferred.resolve(bidspiritEvents);
 			}, debugErrorCallback("findAllEventsInCalendar"));
 			
 			return deferred.promise;
@@ -59,7 +66,12 @@ define(['./utilsAppMainModule'], function (module) {
 		function parseEventDate(eventDateStr,diff){
 			var dateParts = eventDateStr.split(" ")[0].split("-");
 			var timeParts = eventDateStr.split(" ")[1].split(":");
-			return new Date(dateParts[0],dateParts[1]-1,dateParts[2],timeParts[0],timeParts[1],timeParts[2]);
+			var date =  new Date(dateParts[0],dateParts[1]-1,dateParts[2],timeParts[0],timeParts[1],timeParts[2]);
+			if (diff){
+				return new Date(date.getTime()+diff);
+			} else {
+				return date; 
+			}
 		}
 		
 		function clearEvents(eventsList, callback){
@@ -67,8 +79,7 @@ define(['./utilsAppMainModule'], function (module) {
 				var event = eventsList.pop();
 				if (event){
 					$rootScope.debug("deleting "+JSON.stringify(event));
-					deleteEvent(null, null, event.message, parseEventDate(event.startDate), parseEventDate(event.endDate), clearRecursivly);
-					
+					deleteEvent(null, null, event.message, parseEventDate(event.startDate,-1000*60*60*24), parseEventDate(event.endDate+1000*60*60*24), clearRecursivly);
 				} else {
 					callback();
 				}
@@ -93,7 +104,7 @@ define(['./utilsAppMainModule'], function (module) {
 				var eventsToDelete = {};
 				for (var i=0;i<auctionsEvents.length;i++){
 					var event = auctionsEvents[i];
-					var eventKey = event.message.split("Key:")[1];
+					var eventKey = event.message.split(EVENT_KEY_PREFIX)[1];
 					if (eventKey){
 						eventsToDelete[eventKey]=event;
 					}
@@ -105,7 +116,7 @@ define(['./utilsAppMainModule'], function (module) {
 					if (eventsToDelete[eventKey]){
 						delete eventsToDelete[eventKey];
 					} else {							
-						createEvent(auction.eventName, auction.eventAddress,"Key:"+eventKey,auction.eventStart,auction.eventEnd);
+						createEvent(auction.eventName, auction.eventAddress,EVENT_KEY_PREFIX+eventKey,auction.eventStart,auction.eventEnd);
 						addedEvents++;
 					}
 				}
