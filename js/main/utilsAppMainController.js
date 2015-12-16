@@ -126,18 +126,13 @@ define(['./utilsAppMainModule'], function (module) {
           	   });
           }
            
-          
-          
-           
-           
              
-           function init(){
+          function init(){
             	initDebug();
             	$scope.loadState = "loaded";
                 document.getElementById("pagePreLoader").remove();
                 UtilsPathsService.templateState('utils', 'utilsMain', {url:'/'});
                 $state.go("utils");
-                
                 
                 document.addEventListener('deviceready', function () {
                 	initPlugins();
