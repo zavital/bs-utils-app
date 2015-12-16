@@ -42,8 +42,7 @@ define(['./utilsAppMainModule'], function (module) {
 			var deferred = $q.defer();
 			var getListFn;
 			window.plugins.calendar.findEvent(null,null,null,new Date(),nextYear, function(results){
-				$rootScope.debug("found "+results.length+" results."); 
-				$rootScope.debug("first event:"+JSON.stringify(results[0]));
+				$rootScope.debug("found "+results.length+" results.");
 				var bidspiritEvents = [];
 				for (var i=0;i<results.length;i++){
 					var event = results[i];
@@ -116,7 +115,7 @@ define(['./utilsAppMainModule'], function (module) {
 					if (eventsToDelete[eventKey]){
 						delete eventsToDelete[eventKey];
 					} else {							
-						createEvent(auction.eventName, auction.eventAddress,EVENT_KEY_PREFIX+eventKey,auction.eventStart,auction.eventEnd);
+						createEvent(auction.eventName, auction.eventAddress,EVENT_KEY_PREFIX+eventKey,auction.eventStart,auction.eventEnd, debugSuccessCallback("created "+eventKey));
 						addedEvents++;
 					}
 				}
