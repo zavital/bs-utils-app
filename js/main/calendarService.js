@@ -101,14 +101,13 @@ define(['./utilsAppMainModule'], function (module) {
 		}
 		
 		function clearBidspiritEvents(){
-			/*getFutureAuctionsEvents().then(function(auctionsEvents){
+			getFutureAuctionsEvents().then(function(auctionsEvents){
+				console.log("cleareing "+auctionsEvents.length+" events.");
 				clearEvents(auctionsEvents,function(){
 					console.log("cleared "+auctionsEvents.length+" events.");
 				});
-			});*/
+			});
 			
-			window.plugins.calendar.deleteEventFromNamedCalendar(null, null, null, new Date(), future, BIDSPIRIT_CALENDAR_NAME,
-					debugSuccessCallback("clearBidspiritEvents"), debugErrorCallback("deleteEvent"));
 		}
 		
 		function syncAuctionEvents(auctions){
