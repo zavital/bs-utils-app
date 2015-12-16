@@ -83,9 +83,10 @@ define(['./utilsAppMainModule'], function (module) {
         			   var site = data.sites[i]; 
         			   sites[site.id]=site;
         		   }
+        		   
         		   for (var i=0;i<data.houses.length;i++){
         			   var house = data.houses[i];
-        			   house.site = sites[house.siteId] || {};
+        			   house.site = sites[house.bidspiritSiteId] || {};
         			   houses[house.id]=house;
         		   }
         		   for (var i=0;i<data.housesDetails.length;i++){
@@ -96,7 +97,7 @@ define(['./utilsAppMainModule'], function (module) {
         		   for (var i=0;i<data.auctions.length;i++){
         			   var auction = data.auctions[i];
         			   auction.house = houses[auction.houseId];
-        			   var isFutureAuction = new Date(auction.date).getTime()-new Date().getTime() > -1000*60*60*24; 
+        			   var isFutureAuction = new Date(auction.date).getTime()-new Date().getTime() > -1000*60*60*24;
         			   if (!auction.hidden && !auction.catalogOnly && isFutureAuction && auction.house && auction.house.site.code!="demo"){
         				   var dateParts = auction.date.split("-");
         				   var timeParts = auction.time ? auction.time.split(":") : [];
@@ -118,7 +119,6 @@ define(['./utilsAppMainModule'], function (module) {
         				   } else {
         					   auction.eventName="מכירה "+auction.eventName;
         				   }
-        				   console.log(auction.eventName);
         				   auction.eventAddress = getLangField(auction.address);
         				   auctionsToUpdate.push(auction);
         				   
