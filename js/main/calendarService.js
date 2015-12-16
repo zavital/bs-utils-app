@@ -120,6 +120,7 @@ define(['./utilsAppMainModule'], function (module) {
 						}
 					}
 					$rootScope.debug(addedEvents+" events added");
+					
 					var removedEvents = 0;
 					var eventsToDeleteList = [];
 					for (eventKey in eventsToDelete){
@@ -127,7 +128,11 @@ define(['./utilsAppMainModule'], function (module) {
 						eventsToDeleteList.push(event);						
 						removedEvents++;
 					}
-					$rootScope.debug(addedEvents+" events added, "+removedEvents+" removed"); 
+					clearEvents(eventsToDeleteList,function(){
+						$rootScope.debug(removedEvents+" events removed. ");
+					});
+					
+					 
 				});
 			});
 				
