@@ -64,7 +64,7 @@ define(['./utilsAppMainModule'], function (module) {
            
            $scope.updateCalendar = function(){
         	   $rootScope.debug("updating calendar...");
-        	   $http.get("https://bidspirit.com/services/portal/getPortalInfo?includeOldAuctions=false").then(function(response){
+        	   $http.get("https://bidspirit.com/services/portal/getPortalInfo?includeOldAuctions=false&region=ALL").then(function(response){
         		   var data = response.data;
         		   var auctionsToUpdate = [];
         		   var houseNames = {};
@@ -75,7 +75,8 @@ define(['./utilsAppMainModule'], function (module) {
         		   var ruToIlDiff = (timeZonesMap["IL"]-timeZonesMap["RU"])/3600
         		   for (var i=0;i<data.auctions.length;i++){
         			   var auction = data.auctions[i];
-        			   if (new Date(auction.date).getTime()-new Date().getTime() > 0){
+        			   var isFutureAuction = new Date(auction.date).getTime()-new Date().getTime() > -1000*60*60*24; 
+        			   if (!auction.hidden && !auction.catalogOnly && isFutureAuction){
         				   var dateParts = auction.date.split("-");
         				   var timeParts = auction.time ? auction.time.split(":") : [];
         				   if (timeParts.length<2){
