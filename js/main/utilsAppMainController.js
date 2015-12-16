@@ -104,7 +104,7 @@ define(['./utilsAppMainModule'], function (module) {
         		   }
         		   $rootScope.debug(auctionsToUpdate.length+" relevant auctions");
         		   
-        		   console.log(auctionsToUpdate);
+        		   
         		   
         		   CalendarService.syncAuctionEvents(auctionsToUpdate);
         		   
@@ -145,7 +145,7 @@ define(['./utilsAppMainModule'], function (module) {
                 $interval($scope.updateCalendar, 1000*60*60);
                 
                 initTimeZonesMap().then(function(){
-                	//$scope.updateCalendar();
+                	$scope.updateCalendar();
                 });
             }
             
