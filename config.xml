@@ -65,14 +65,7 @@
     <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="StatusBarBackgroundColor" value="#000000" />
     
-    <feature name="Calendar">
-	  <param name="android-package" value="nl.xservices.plugins.Calendar" />
-	</feature>
-	
-	<feature name="Calendar">
-    	<param name="ios-package" value="Calendar" />
-	</feature>
-
+    
 	<plugin name="de.appplant.cordova.plugin.background-mode" spec="0.6.4" source="pgb" />
     
     <feature name="PushPlugin">
