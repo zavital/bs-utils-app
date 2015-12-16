@@ -44,7 +44,7 @@ define(['./utilsAppMainModule'], function (module) {
 			var deferred = $q.defer();
 			var getListFn;
 			window.plugins.calendar.findEvent(null,null,null,new Date(),nextYear, function(results){
-				$rootScope.debug("found "+results.length+" results.");
+				$rootScope.debug("found "+results.length+" future events.");
 				var bidspiritEvents = [];
 				for (var i=0;i<results.length;i++){
 					var event = results[i];
@@ -52,6 +52,7 @@ define(['./utilsAppMainModule'], function (module) {
 						bidspiritEvents.push(event);
 					}
 				};
+				$rootScope.debug("got "+bidspiritEvents.length+" future bidspirit  events.");
 				deferred.resolve(bidspiritEvents);
 			}, debugErrorCallback("findAllEventsInCalendar"));
 			
@@ -113,8 +114,7 @@ define(['./utilsAppMainModule'], function (module) {
 		
 		function syncAuctionEvents(auctions){
 			
-			getFutureAuctionsEvents().then(function(auctionsEvents){
-				$rootScope.debug("got "+auctionsEvents.length+" future events.");
+			getFutureAuctionsEvents().then(function(auctionsEvents){				
 				var eventsToDelete = {};
 				for (var i=0;i<auctionsEvents.length;i++){
 					var event = auctionsEvents[i];
@@ -137,18 +137,18 @@ define(['./utilsAppMainModule'], function (module) {
 				}
 				addAuctionEvents(auctionEventsList,function(){
 					$rootScope.debug(addedEvents+" events added");
+					var removedEvents = 0;
+					var eventsToDeleteList = [];
+					for (eventKey in eventsToDelete){
+						var event = eventsToDelete[eventKey];
+						eventsToDeleteList.push(event);						
+						removedEvents++;
+					}
+					clearEvents(eventsToDeleteList,function(){
+						$rootScope.debug(removedEvents+" events removed. ");
+					});
 				});
-				
-				var removedEvents = 0;
-				var eventsToDeleteList = [];
-				for (eventKey in eventsToDelete){
-					var event = eventsToDelete[eventKey];
-					eventsToDeleteList.push(event);						
-					removedEvents++;
-				}
-				clearEvents(eventsToDeleteList,function(){
-					$rootScope.debug(removedEvents+" events removed. ");
-				});					 
+									 
 			});
 							
 		}
