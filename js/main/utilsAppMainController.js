@@ -28,14 +28,24 @@ define(['./utilsAppMainModule'], function (module) {
             function initTimeZonesMap(){
             	var deferred = $q.defer();
             	$rootScope.debug("init time zones map...");
-            	$http.get("http://api.timezonedb.com/?zone=Asia/Jerusalem&key=NKJH8T83ZVJJ&format=json").then(function(response){
-            		timeZonesMap.il =  response.data.gmtOffset*1;
-            		$http.get("http://api.timezonedb.com/?zone=Europe/Moscow&key=NKJH8T83ZVJJ&format=json").then(function(response){
-            			timeZonesMap.ru =  response.data.gmtOffset*1;
-            			$rootScope.debug("got timezones map..."+JSON.stringify(timeZonesMap));
-            			deferred.resolve();
-            		});
-            	});
+            	var lastTimeZoneUpdate = localStorage.lastTimeZoneUpdate;
+            	var lastTimeZoneMap = localStorage.lastTimeZoneMap
+            	if (lastTimeZoneUpdate && lastTimeZoneMap && new Date(lastTimeZoneUpdate*1) > new Date()-1000*60*60*12){
+            		timeZonesMap = JSON.parse(lastTimeZoneMap);
+            		$rootScope.debug("loaded cached time zones"+JSON.stringify(timeZonesMap));
+            		deferred.resolve();
+            	} else {
+	            	$http.get("http://api.timezonedb.com/?zone=Asia/Jerusalem&key=NKJH8T83ZVJJ&format=json").then(function(response){
+	            		timeZonesMap.il =  response.data.gmtOffset*1;
+	            		$http.get("http://api.timezonedb.com/?zone=Europe/Moscow&key=NKJH8T83ZVJJ&format=json").then(function(response){
+	            			timeZonesMap.ru =  response.data.gmtOffset*1;
+	            			localStorage.lastTimeZoneMap =  JSON.stringify(timeZonesMap);
+	            			localStorage.lastTimeZoneUpdate =  new Date().getTime();
+	            			$rootScope.debug("updated timezones map..."+JSON.stringify(timeZonesMap));
+	            			deferred.resolve();
+	            		});
+	            	});
+            	}
             	return deferred.promise;
             }
              
@@ -66,17 +76,28 @@ define(['./utilsAppMainModule'], function (module) {
         	   $rootScope.debug("updating calendar...");
         	   $http.get("https://bidspirit.com/services/portal/getPortalInfo?includeOldAuctions=false&region=ALL").then(function(response){
         		   var data = response.data;
-        		   var auctionsToUpdate = [];
-        		   var houseNames = {};
+        		   var auctionsToUpdate = [];        		   
+        		   var sites = {};
+        		   var houses = {};
+        		   for (var i=0;i<data.sites.length;i++){
+        			   var site = data.sites[i]; 
+        			   sites[site.id]=site;
+        		   }
+        		   for (var i=0;i<data.houses.length;i++){
+        			   var house = data.houses[i];
+        			   house.site = sites[house.siteId] || {};
+        			   houses[house.id]=house;
+        		   }
         		   for (var i=0;i<data.housesDetails.length;i++){
         			   var houseDetails = data.housesDetails[i];
-        			   houseNames[houseDetails.auctionHouseId] = getLangField(houseDetails.name) 
+        			   houses[houseDetails.auctionHouseId].details = houseDetails;
         		   }
         		   var ruToIlDiff = (timeZonesMap["il"]-timeZonesMap["ru"])/3600
         		   for (var i=0;i<data.auctions.length;i++){
         			   var auction = data.auctions[i];
+        			   auction.house = houses[auction.houseId];
         			   var isFutureAuction = new Date(auction.date).getTime()-new Date().getTime() > -1000*60*60*24; 
-        			   if (!auction.hidden && !auction.catalogOnly && isFutureAuction && auction.auctionIdInApp){
+        			   if (!auction.hidden && !auction.catalogOnly && isFutureAuction && auction.house && auction.house.site.code!="demo"){
         				   var dateParts = auction.date.split("-");
         				   var timeParts = auction.time ? auction.time.split(":") : [];
         				   if (timeParts.length<2){
@@ -88,7 +109,7 @@ define(['./utilsAppMainModule'], function (module) {
         				   }
         				   auction.eventStart = new Date(dateParts[0]*1,dateParts[1]*1-1,dateParts[2]*1,timeParts[0]*1,timeParts[1]*1);
         				   auction.eventEnd = new Date(auction.eventStart.getTime()+1000*60*60*4);
-        				   auction.eventName = houseNames[auction.houseId];
+        				   auction.eventName = getLangField(auction.house.details.name);
         				   if (auction.number){
         					   auction.eventName+=" מכירה "+auction.number;
         					   if (auction.part){
@@ -97,6 +118,7 @@ define(['./utilsAppMainModule'], function (module) {
         				   } else {
         					   auction.eventName="מכירה "+auction.eventName;
         				   }
+        				   console.log(auction.eventName);
         				   auction.eventAddress = getLangField(auction.address);
         				   auctionsToUpdate.push(auction);
         				   
@@ -117,10 +139,7 @@ define(['./utilsAppMainModule'], function (module) {
            
            $scope.removeAllFutureEvents=function(){           
         	   var startDate = new Date();
-        	   var endDate = new Date(2016,3,29,19,40,0,0,0);
-        	   var title = "Bidspirit auction";
-        	   var eventLocation = "somewhere";
-        	   var notes = "Some notes about this event.";
+        	   var endDate = new Date(2016,3,29,19,40,0,0,0);        	  
           	   CalendarService.deleteEvent(null,null,null,startDate,endDate,function(){
           		   $rootScope.debug("deleted future events");
           	   });

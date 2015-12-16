@@ -104,9 +104,10 @@ define(['./utilsAppMainModule'], function (module) {
 		
 		function clearBidspiritEvents(){
 			getFutureAuctionsEvents().then(function(auctionsEvents){
-				$rootScope.debug("cleareing "+auctionsEvents.length+" events.");
+				var count = auctionsEvents.length;
+				$rootScope.debug("cleareing "+count+" events.");
 				clearEvents(auctionsEvents,function(){
-					$rootScope.debug("cleared "+auctionsEvents.length+" events.");
+					$rootScope.debug("cleared "+count+" events.");
 				});
 			});
 			
