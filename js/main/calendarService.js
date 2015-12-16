@@ -78,7 +78,7 @@ define(['./utilsAppMainModule'], function (module) {
 				var event = eventsList.pop();
 				if (event){
 					$rootScope.debug("deleting "+JSON.stringify(event));
-					deleteEvent(null, null, event.message, parseEventDate(event.startDate,-1000*60*60*24), parseEventDate(event.endDate+1000*60*60*24), clearRecursivly);
+					deleteEvent(null, null, event.message, parseEventDate(event.startDate,-1000*60*60*1), parseEventDate(event.endDate+1000*60*60*1), clearRecursivly);
 				} else {
 					callback();
 				}
