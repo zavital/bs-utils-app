@@ -110,6 +110,50 @@ define(['./utilsAppMainModule'], function (module) {
            $scope.clearBidspiritEvents=function(){
         	   CalendarService.clearBidspiritEvents();
            }
+           
+           $scope.testAdd=function(){           
+        	   var startDate = new Date(2015,11,30,18,30,0,0,0); // beware: month 0 = january, 11 = december
+        	   var endDate = new Date(2015,11,30,19,30,0,0,0);
+        	   var title = "Bidspirit auction";
+        	   var eventLocation = "somewhere";
+        	   var notes = "Some notes about this event.";
+          	   CalendarService.createEvent(title,eventLocation,notes,startDate,endDate,function(){
+          		 $rootScope.debug("created eng event");
+          		 var hebStartDate = new Date(2015,11,30,10,30,0,0,0); // beware: month 0 = january, 11 = december
+          		 var hebEndDate = new Date(2015,11,30,11,30,0,0,0);
+          		 var hebTitle = "מכירה";
+          		 var hebEventLocation = "שם";
+          		 var hebNotes = "מידע";
+            	 CalendarService.createEvent(hebTitle,hebEventLocation,hebNotes,hebStartDate,hebEndDate,function(){
+            		 $rootScope.debug("created heb event");
+            	 });
+          	   });
+          }
+           
+           
+           $scope.testRemove=function(){           
+        	   var startDate = new Date(2015,11,30,18,30,0,0,0); // beware: month 0 = january, 11 = december
+        	   var endDate = new Date(2015,11,30,19,30,0,0,0);
+        	   var title = "Bidspirit auction";
+        	   var eventLocation = "somewhere";
+        	   var notes = "Some notes about this event.";
+          	   CalendarService.deleteEvent(title,eventLocation,notes,startDate,endDate,function(){
+          		 $rootScope.debug("deleted eng event");
+          		 var hebStartDate = new Date(2015,11,30,10,30,0,0,0); // beware: month 0 = january, 11 = december
+          		 var hebEndDate = new Date(2015,11,30,11,30,0,0,0);
+          		 var hebTitle = "מכירה";
+          		 var hebEventLocation = "שם";
+          		 var hebNotes = "מידע";
+            	 CalendarService.deleteEvent(hebTitle,hebEventLocation,hebNotes,hebStartDate,hebEndDate,function(){
+            		 $rootScope.debug("deleted heb event");
+            	 });
+          	   });
+          }
+           
+          
+          
+           
+           
              
            function init(){
             	initDebug();
