@@ -137,7 +137,7 @@ define(['./utilsAppMainModule'], function (module) {
 				}
 				addAuctionEvents(auctionEventsList,function(){
 					$rootScope.debug(addedEvents+" events added");
-				}
+				});
 				
 				var removedEvents = 0;
 				var eventsToDeleteList = [];
