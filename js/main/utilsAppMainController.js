@@ -135,8 +135,8 @@ define(['./utilsAppMainModule'], function (module) {
            
            
            $scope.testRemove=function(){           
-        	   var startDate = new Date(2015,10,30,8,30,0,0,0); // beware: month 0 = january, 11 = december
-        	   var endDate = new Date(2016,11,30,19,40,0,0,0);
+        	   var startDate = new Date(2016,0,30,8,30,0,0,0); // beware: month 0 = january, 11 = december
+        	   var endDate = new Date(2016,3,29,19,40,0,0,0);
         	   var title = "Bidspirit auction";
         	   var eventLocation = "somewhere";
         	   var notes = "Some notes about this event.";
@@ -172,7 +172,7 @@ define(['./utilsAppMainModule'], function (module) {
                 $interval($scope.updateCalendar, 1000*60*60);
                 
                 initTimeZonesMap().then(function(){
-                	$scope.updateCalendar();
+                	//$scope.updateCalendar();
                 });
             }
             

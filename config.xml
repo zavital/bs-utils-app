@@ -25,12 +25,6 @@
     <gap:plugin name="cordova-plugin-whitelist" source="npm" version="1.0.0"  />
     
     <gap:plugin name="com.orcasinc.cordova.inappbrowser" version="1.0.3" />
-    <gap:plugin name="com.ohh2ahh.plugins.appavailability" version="0.3.1" />
-    <plugin name="com.phonegap.plugins.pushplugin" spec="2.5.0" source="pgb" />
-    
-    <gap:plugin name="com.danielcwilson.plugins.googleanalytics" version="0.6.1" />
-    
-    <plugin name="cordova-plugin-dialogs" spec="1.1.1" source="pgb" />
     
     <plugin name="cordova-plugin-calendar" />
     
@@ -71,31 +65,6 @@
     
 	<plugin name="de.appplant.cordova.plugin.background-mode" spec="0.6.4" source="pgb" />
     
-    <feature name="PushPlugin">
-  		<param name="ios-package" value="PushPlugin" />
-	</feature>
-	
-	<feature name="PushPlugin" >
-    	<param name="android-package" value="com.amazon.cordova.plugin.PushPlugin"/>
-	</feature>
-	
-	<gap:config-file platform="android" parent="/manifest/application">
-    	<activity android:launchMode="singleInstance" />
-	</gap:config-file>
-	
-	 <gap:config-file platform="ios" parent="LSApplicationQueriesSchemes" mode="replace">
-		<array>
-			<string>puffin</string>
-			<string>puffinFree</string>
-		</array>
-    </gap:config-file>
-	
-	
-	
-    
-	<preference name="orientation" value="portrait" />
-	
-	<preference name="DisallowOverscroll" value="true" />
 	 
      
 </widget>

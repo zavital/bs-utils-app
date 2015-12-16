@@ -19,6 +19,7 @@ define([
 	        return function(exception, cause){
 	            var $rootScope = $injector.get("$rootScope");
 	            if ($rootScope.debug){
+	            	$rootScope.debug(exception.message);
 	            	$rootScope.debug(exception.stack);
 	            } else {
 	            	console.log(exception.stack);

@@ -78,7 +78,7 @@ define(['./utilsAppMainModule'], function (module) {
 					$rootScope.debug("deleting "+JSON.stringify(event));
 					//deleteEvent(event.title, event.location, event.message, parseEventDate(event.startDate), parseEventDate(event.endDate), clearRecursivly);
 					window.plugins.calendar.deleteEventFromNamedCalendar(null, null, event.message, new Date(), future, BIDSPIRIT_CALENDAR_NAME,
-							debugSuccessCallback("clearBidspiritEvents"), debugErrorCallback("deleteEvent"));
+							clearRecursivly, debugErrorCallback("clearBidspiritEvents"));
 				} else {
 					callback();
 				}
@@ -92,7 +92,7 @@ define(['./utilsAppMainModule'], function (module) {
 				});
 			});*/
 			
-			window.plugins.calendar.deleteEventFromNamedCalendar(title, eventLocation, notes, new Date(), future, BIDSPIRIT_CALENDAR_NAME,
+			window.plugins.calendar.deleteEventFromNamedCalendar(null, null, null, new Date(), future, BIDSPIRIT_CALENDAR_NAME,
 					debugSuccessCallback("clearBidspiritEvents"), debugErrorCallback("deleteEvent"));
 		}
 		
@@ -130,12 +130,9 @@ define(['./utilsAppMainModule'], function (module) {
 					}
 					clearEvents(eventsToDeleteList,function(){
 						$rootScope.debug(removedEvents+" events removed. ");
-					});
-					
-					 
+					});					 
 				});
-			});
-				
+			});				
 		}
 		
 		
