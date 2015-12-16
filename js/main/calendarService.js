@@ -22,7 +22,7 @@ define(['./utilsAppMainModule'], function (module) {
 		}
 		
 		function  createEvent(title,eventLocation,notes, startDate,endDate, callback){
-			$rootScope.debug("adding event "+title+", "+eventLocation+", "+notes+", "+startDate+", "+endDate);
+			alert("adding event "+title+", "+eventLocation+", "+notes+", "+startDate+", "+endDate);
 			window.plugins.calendar.createEvent(title,eventLocation,notes,startDate,endDate, callback, debugErrorCallback("createEvent "+notes));
 		}
 		
@@ -42,7 +42,7 @@ define(['./utilsAppMainModule'], function (module) {
 			var deferred = $q.defer();
 			var getListFn;
 			window.plugins.calendar.findEvent(null,null,null,new Date(),nextYear, function(results){
-				alert("found "+results.length+" results.");
+				$rootScope.debug("found "+results.length+" results.");
 				var bidspiritEvents = [];
 				for (var i=0;i<results.length;i++){
 					var event = results[i];
@@ -78,7 +78,7 @@ define(['./utilsAppMainModule'], function (module) {
 				var event = eventsList.pop();
 				if (event){
 					$rootScope.debug("deleting "+JSON.stringify(event));
-					deleteEvent(null, null, event.message, parseEventDate(event.startDate,-1000*60*60*1), parseEventDate(event.endDate+1000*60*60*1), clearRecursivly);
+					deleteEvent(null, null, event.message, parseEventDate(event.startDate,-1000*60*60*24), parseEventDate(event.endDate+1000*60*60*24), clearRecursivly);
 				} else {
 					callback();
 				}
@@ -114,7 +114,7 @@ define(['./utilsAppMainModule'], function (module) {
 		function syncAuctionEvents(auctions){
 			
 			getFutureAuctionsEvents().then(function(auctionsEvents){
-				alert("got "+auctionsEvents.length+" future events.");
+				$rootScope.debug("got "+auctionsEvents.length+" future events.");
 				var eventsToDelete = {};
 				for (var i=0;i<auctionsEvents.length;i++){
 					var event = auctionsEvents[i];
