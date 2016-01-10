@@ -98,7 +98,7 @@ define(['./utilsAppMainModule'], function (module) {
         			   var auction = data.auctions[i];
         			   auction.house = houses[auction.houseId];
         			   var isFutureAuction = new Date(auction.date).getTime()-new Date().getTime() > 0;
-        			   if (!auction.hidden && !auction.catalogOnly && isFutureAuction && auction.house && auction.house.site.code && auction.house.site.code!="demo"){
+        			   if (!auction.hidden && !auction.catalogOnly && isFutureAuction && auction.time && auction.house && auction.house.site.code && auction.house.site.code!="demo"){
         				   var dateParts = auction.date.split("-");
         				   var timeParts = auction.time ? auction.time.split(":") : [];
         				   if (timeParts.length<2){
