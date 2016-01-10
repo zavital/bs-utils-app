@@ -91,7 +91,7 @@ define(['./utilsAppMainModule'], function (module) {
 		function addAuctionEvents(auctionsList, callback){
 			function addRecursivly(){
 				var auction = auctionsList.pop();
-				if (auction){
+				if (auction  && auction.time ){
 					var eventKey = getAuctionEventKey(auction);
 					$rootScope.debug("creating "+eventKey);
 					createEvent(auction.eventName, auction.eventAddress,EVENT_KEY_PREFIX+eventKey, auction.eventStart, auction.eventEnd, addRecursivly);
