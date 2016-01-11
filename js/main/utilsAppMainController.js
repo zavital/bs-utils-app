@@ -97,8 +97,8 @@ define(['./utilsAppMainModule'], function (module) {
         		   for (var i=0;i<data.auctions.length;i++){
         			   var auction = data.auctions[i];
         			   auction.house = houses[auction.houseId];
-        			   var isFutureAuction = new Date(auction.date).getTime()-new Date().getTime() > 0;
-        			   if (!auction.hidden && !auction.catalogOnly && isFutureAuction && auction.time && auction.house && auction.house.site.code && auction.house.site.code!="demo"){
+        			   
+        			   if (!auction.hidden && !auction.catalogOnly && auction.time && auction.house && auction.house.site.code && auction.house.site.code!="demo"){
         				   var dateParts = auction.date.split("-");
         				   var timeParts = auction.time ? auction.time.split(":") : [];
         				   if (timeParts.length<2){
@@ -109,18 +109,20 @@ define(['./utilsAppMainModule'], function (module) {
         					   }
         				   }
         				   auction.eventStart = new Date(dateParts[0]*1,dateParts[1]*1-1,dateParts[2]*1,timeParts[0]*1,timeParts[1]*1);
-        				   auction.eventEnd = new Date(auction.eventStart.getTime()+1000*60*60*4);
-        				   auction.eventName = getLangField(auction.house.details.name);
-        				   if (auction.number){
-        					   auction.eventName+=" מכירה "+auction.number;
-        					   if (auction.part){
-        						   auction.eventName+=" חלק "+auction.part;
-        					   }
-        				   } else {
-        					   auction.eventName="מכירה "+auction.eventName;
+        				   if (new Date().getTime()<auction.eventStart.getTime()){
+	        				   auction.eventEnd = new Date(auction.eventStart.getTime()+1000*60*60*4);
+	        				   auction.eventName = getLangField(auction.house.details.name);
+	        				   if (auction.number){
+	        					   auction.eventName+=" מכירה "+auction.number;
+	        					   if (auction.part){
+	        						   auction.eventName+=" חלק "+auction.part;
+	        					   }
+	        				   } else {
+	        					   auction.eventName="מכירה "+auction.eventName;
+	        				   }
+	        				   auction.eventAddress = getLangField(auction.address);
+	        				   auctionsToUpdate.push(auction);
         				   }
-        				   auction.eventAddress = getLangField(auction.address);
-        				   auctionsToUpdate.push(auction);
         				   
         			   }
         		   }
