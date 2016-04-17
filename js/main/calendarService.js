@@ -62,7 +62,7 @@ define(['./utilsAppMainModule'], function (module) {
 		
 		
 		function getAuctionEventKey(auction){
-			return auction.houseCode+"_"+auction.date+"_"+auction.time;
+			return "auction_"+auction.houseCode+"_"+auction.date+"_"+auction.time;
 		}
 		
 		function parseEventDate(eventDateStr,diff){

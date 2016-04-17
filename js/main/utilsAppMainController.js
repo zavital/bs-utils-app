@@ -53,7 +53,7 @@ define(['./utilsAppMainModule'], function (module) {
            $scope.clearLog = function(){
         	   initDebug();
         	   try {
-        		   $rootScope.debug("backgourn enabled: "+cordova.plugins.backgroundMode.isEnabled());
+        		   $rootScope.debug("background enabled: "+cordova.plugins.backgroundMode.isEnabled());
         	   } catch (e){
         	   }
            }
