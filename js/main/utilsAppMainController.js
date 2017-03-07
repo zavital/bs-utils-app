@@ -74,7 +74,7 @@ define(['./utilsAppMainModule'], function (module) {
            
            $scope.updateCalendar = function(){
         	   $rootScope.debug("updating calendar...");
-        	   $http.get("https://bidspirit.com/services/portal/getPortalInfo?includeOldAuctions=false&region=ALL").then(function(response){
+        	   $http.get("https://bidspirit.com/services/portal/getPortalInfo?includeOldAuctions=false&region=ALL&contentType=ALL").then(function(response){
         		   var data = response.data;
         		   var auctionsToUpdate = [];        		   
         		   var sites = {};
